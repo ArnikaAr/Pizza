@@ -110,8 +110,6 @@ const templatesTable = pizzas.map(pizza => createCardTable(pizza));
 const table = templatesTable.join(' ');
 document.querySelector('.table').innerHTML = table;
 
-///////////__________cash filter__________///////////
-
 $(".down").click(function () {
 
   var count = pizzas.length - 1;
