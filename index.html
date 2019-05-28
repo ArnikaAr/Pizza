@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Pizza</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
+        integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+</head>
+
+<body>
+    <header class="header">
+        <select id="type" name="pizzas">
+            <option>list</option>
+            <option selected="select">Table</option>
+        </select>
+
+        <div class="filter">
+            <h3>Pizzas cash filter</h3>
+            <div class="btnBar">
+            <button id="list" class="up">to up</button>
+            <button id="list" class="down">to down</button>
+        </div>
+        </div>
+    </header>
+    <section class="main">
+        <div class="app">
+            <div class="table"></div>
+        </div>
+    </section>
+    <script src="./vanilla.js"></script>
+</body>
+
+</html>
