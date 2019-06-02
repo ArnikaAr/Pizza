@@ -36,6 +36,13 @@ document.querySelector('#showConst').onclick = function () {
 document.querySelector('#closeConst').onclick = function () {
   Constructor.close();
 }
+var Final = document.getElementById('final');
+document.querySelector('#showFinal').onclick = function () {
+  Final.showModal();
+}
+document.querySelector('#closeFinal').onclick = function () {
+  Final.close();
+}
 
 $(document).ready(function () {
   localStorage.setItem('email', 'oryna.likhota@nure.ua');
@@ -65,7 +72,6 @@ $("select")
   .change(function () {
     if ($(this).val() == 'None') {
       $('.app').css('display', 'none');
-      $('.table').css('display', 'none');
     }
     else if ($(this).val() == 'Table') {
       $('.app').css('display', 'block');
@@ -100,12 +106,10 @@ function createCardTable(pizza) {
         <p>${pizza.price} $</p>
         <p class="kkal">${pizza.kkal} kkal</p>
         <button id="list" class="${pizza.name}">show Components</buttons>
-        <button id="order" class="order"> Order</buttons>
     </div>
   `}
 
 $(document).on('click', '#list', function (event) {
-  $('#order').css('display','none');
   var name = $(event.target).attr('class');
   for (var key in pizzas) {
     if (pizzas[key].name == name) {
