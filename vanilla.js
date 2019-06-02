@@ -67,7 +67,7 @@ $(document).ready(function () {
   }
 })
 
-$("select")
+$("#type")
 
   .change(function () {
     if ($(this).val() == 'None') {
