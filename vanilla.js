@@ -15,8 +15,18 @@ const pizzas = [
 const components = { dorBlue: 100, ham: 100, peperoni: 200, tomato: 50, tomatoSouse: 40, tomatoSouse1: 10, tomatoSouse2: 15, tomatoSouse4: 20, garlick: 10, sweet: 5, another: 16, chilli: 5, sweet_garlick: 15 };
 const cost = { dorBlue: 3, parmezan: 4, Mozzarella: 3, peperoni: 5, ham: 5, tomato: 2, tomatoSouse: 2, tomatoSouse1: 3, tomatoSouse2: 3, tomatoSouse4: 2, garlick: 1, sweet: 2, another: 4, chilli: 5, sweet_garlick: 5 };
 
+class newCart {
+  constructor(name, kal, price) {
+    this.name = name;
+    this.price = price;
+    this.kkal = kal;
+  }
+}
 
-
+$(document).ready(function () {
+  localStorage.clear();
+  localStorage.setItem('email', 'oryna.likhota@nure.ua');
+})
 $("select")
 
   .change(function () {
@@ -37,7 +47,7 @@ $("select")
       $('.card').css({ 'display': 'flex', 'width': '90%', 'flex-direction': 'row' });
       $('.card-img').css('display', 'none');
       $('.card-list').css('display', 'none');
-      $('button #list').css('display', 'none');
+      $('button#list').css('display', 'none');
     }
   })
   .change();
@@ -64,31 +74,43 @@ $(document).on('click', '#list', function (event) {
   for (var key in pizzas) {
     if (pizzas[key].name == name) {
       window.kkal = pizzas[key].kkal;
+      window.price = pizzas[key].price;
+      window.name = pizzas[key].name;
       var templist = Object.entries(pizzas[key].list).toString().split(',');
       var list = [];
       var list = templist.filter(function (v, i) {
         return i % 2 !== 0;
       });
-      console.log(list);
       for (var key in list) {
-        $(event.target).closest('div').append('</br> <input checked type="checkbox" class="radio" id="' + list[key] + '"> <label for="' + list[key] + '">' + list[key] + '</label> </br>  ');
+        $(event.target).closest('div').append('</br> <div class="radioList"><input checked type="checkbox" class="radio" id="' + list[key] + '"> <label for="' + list[key] + '">' + list[key] + '</label> </div></br>  ');
       }
-      $(event.target).closest('div').append('<div class="newKkal">Итого каллорий: ' + kkal + ' kkal </div> </br> <button id="list"> Order</buttons>');
+      $(event.target).closest('div').append('<div class="newKkal">Total calories: ' + kkal + ' kkal </div> </br> ');
+      $(event.target).closest('div').append('<div class="newPrice">Total price: ' + price + ' $ </div> </br> <button id="list" class="order"> Order</buttons>');
     }
   }
+
 });
 
 $(document).on('change', '.radio', function (event) {
   var value = $(this).val();
   $('.radio[value=' + value + ']').prop('checked', this.checked);
   var newKkal = 0;
+  var newPrice = 0;
   if (this.checked) {
     var component = $(this).attr('id');
     for (var key in components) {
       if (component === key) {
         newKkal = kkal + components[key];
         kkal = newKkal;
-        $('.newKkal').html('<div class="newKkal">Итого каллорий: ' + newKkal + ' kkal </div> ');
+        $('.newKkal').html('<div class="newKkal">Total calories: ' + newKkal + ' kkal </div> ');
+      }
+    }
+    for (var key in cost) {
+      if (component === key) {
+        newPrice = price + cost[key];
+        price = newPrice;
+        $('.newPrice').html('<div class="newPrice">Total price: ' + newPrice + ' $ </div> ');
+
       }
     }
   }
@@ -99,13 +121,45 @@ $(document).on('change', '.radio', function (event) {
       if (component === key) {
         newKkal = kkal - components[key];
         kkal = newKkal;
-        $('.newKkal').html('<div class="newKkal">Итого каллорий: ' + newKkal + ' kkal </div> ');
+        $('.newKkal').html('<div class="newKkal">Total calories: ' + newKkal + ' kkal </div> ');
+      }
+    }
+    for (var key in cost) {
+      if (component === key) {
+        newPrice = price - cost[key];
+        price = newPrice;
+        $('.newPrice').html('<div class="newPrice">Total price: ' + newPrice + ' $ </div> ');
+
       }
     }
   }
 
 });
 
+
+var dialog = document.querySelector('dialog');
+document.querySelector('#show').onclick = function () {
+  dialog.showModal();
+};
+document.querySelector('#close').onclick = function () {
+  dialog.close();
+};
+
+let allPrice = 0;
+
+$(document).on('click', '.order', function (event) {
+  if (localStorage.getItem('email') == 'oryna.likhota@nure.ua') {
+    cartObj = new newCart(name, kkal, price);
+    localStorage.setItem('pizza' + name + '', JSON.stringify(cartObj));
+    var ourPizza = JSON.parse(localStorage.getItem('pizza' + name + ''));
+    allPrice = allPrice + ourPizza.price;
+    $('.cartItem').append(' <tr> <td> ' + ourPizza.name + ' - </td><td> ' + ourPizza.kkal + ' kkal -  </td><td> ' + ourPizza.price + ' $ </td></tr>');
+    $('.allPrice').html('Total price: ' + allPrice + ' $')
+  }
+  else {
+    localStorage.clear();
+  }
+});
 const templatesTable = pizzas.map(pizza => createCardTable(pizza));
 const table = templatesTable.join(' ');
 document.querySelector('.table').innerHTML = table;
@@ -149,3 +203,8 @@ $(".up").click(function () {
   document.querySelector('.table').innerHTML = table;
 
 })
+
+
+
+
+
