@@ -22,16 +22,50 @@ class newCart {
     this.kkal = kal;
   }
 }
+var Cart = document.getElementById('Cart');
+document.querySelector('#showCart').onclick = function () {
+  Cart.showModal();
+};
+document.querySelector('#closeCart').onclick = function () {
+  Cart.close();
+};
+var Constructor = document.getElementById('Constructor');
+document.querySelector('#showConst').onclick = function () {
+  Constructor.showModal();
+}
+document.querySelector('#closeConst').onclick = function () {
+  Constructor.close();
+}
 
 $(document).ready(function () {
-  localStorage.clear();
   localStorage.setItem('email', 'oryna.likhota@nure.ua');
+  var localMail = localStorage.getItem('email');
+
+  if (localMail == 'oryna.likhota@nure.ua') {
+    for (key in localStorage) {
+      if (key.indexOf('pizza') != -1) {
+        let ourPizza = JSON.parse(localStorage[key]);
+        console.log(ourPizza);
+        allPrice = allPrice + ourPizza.price;
+        $('.cartItem').append(' <tr> <td> ' + ourPizza.name + ' - </td><td> ' + ourPizza.kkal + ' kkal -  </td><td> ' + ourPizza.price + ' $ </td><td> amount:<input class="amount" type="number"min="1" value="1"></td></tr>');
+        $('.allPrice').html('Total price: ' + allPrice + ' $')
+
+      }
+    }
+
+  }
+  for (key in components) {
+    $('.constructorSelect').append('<option value="' + key + '" id="constValue">' + key + '</option>');
+
+  }
 })
+
 $("select")
 
   .change(function () {
     if ($(this).val() == 'None') {
       $('.app').css('display', 'none');
+      $('.table').css('display', 'none');
     }
     else if ($(this).val() == 'Table') {
       $('.app').css('display', 'block');
@@ -66,10 +100,12 @@ function createCardTable(pizza) {
         <p>${pizza.price} $</p>
         <p class="kkal">${pizza.kkal} kkal</p>
         <button id="list" class="${pizza.name}">show Components</buttons>
+        <button id="order" class="order"> Order</buttons>
     </div>
   `}
 
 $(document).on('click', '#list', function (event) {
+  $('#order').css('display','none');
   var name = $(event.target).attr('class');
   for (var key in pizzas) {
     if (pizzas[key].name == name) {
@@ -88,7 +124,7 @@ $(document).on('click', '#list', function (event) {
       $(event.target).closest('div').append('<div class="newPrice">Total price: ' + price + ' $ </div> </br> <button id="list" class="order"> Order</buttons>');
     }
   }
-
+  $(this).prop('disabled', true);
 });
 
 $(document).on('change', '.radio', function (event) {
@@ -137,15 +173,10 @@ $(document).on('change', '.radio', function (event) {
 });
 
 
-var dialog = document.querySelector('dialog');
-document.querySelector('#show').onclick = function () {
-  dialog.showModal();
-};
-document.querySelector('#close').onclick = function () {
-  dialog.close();
-};
+
 
 let allPrice = 0;
+let cartArr = [];
 
 $(document).on('click', '.order', function (event) {
   if (localStorage.getItem('email') == 'oryna.likhota@nure.ua') {
@@ -153,12 +184,14 @@ $(document).on('click', '.order', function (event) {
     localStorage.setItem('pizza' + name + '', JSON.stringify(cartObj));
     var ourPizza = JSON.parse(localStorage.getItem('pizza' + name + ''));
     allPrice = allPrice + ourPizza.price;
-    $('.cartItem').append(' <tr> <td> ' + ourPizza.name + ' - </td><td> ' + ourPizza.kkal + ' kkal -  </td><td> ' + ourPizza.price + ' $ </td></tr>');
+    $('.cartItem').append(' <tr> <td> ' + ourPizza.name + ' - </td><td> ' + ourPizza.kkal + ' kkal -  </td><td> ' + ourPizza.price + ' $ </td> <td> amount:<input  class="amount" type="number" min="1" value="1"></td></tr>');
     $('.allPrice').html('Total price: ' + allPrice + ' $')
+
   }
   else {
     localStorage.clear();
   }
+  $(this).prop('disabled', true);
 });
 const templatesTable = pizzas.map(pizza => createCardTable(pizza));
 const table = templatesTable.join(' ');
