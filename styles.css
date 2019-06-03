@@ -30,7 +30,7 @@ header {
 .cartBlock,
 .constructor{
     width: 5vw;
-    height: 14vh;
+    height: 40px;
     background-color: white;
     border: 1px solid black;
 }
@@ -115,14 +115,30 @@ button:hover {
     width: 35%;
 }
 #findPizza{
-    height: 30px;
+    height: 20px;
     width: 30%;
+    margin: 10px 20px;
+    border: none;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, .1);
+}
+#list{
+    width: 100px;
+    height: 30px;
+    font-size: 10px;
 }
 .btnBar {
     display: flex;
     flex-direction: row;
+    justify-content: flex-start;
 }
-
+#customName{
+margin: 10px 0;
+}
+.customPrise,
+.customCalories,
+.constructorSelect{
+    margin: 5px 10px;
+}
 #cartCounter {
     border-radius: 40%;
     background-color: red;

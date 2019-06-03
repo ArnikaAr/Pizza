@@ -111,11 +111,11 @@ function createCardTable(pizza) {
         <h3 class="name ${pizza.name}" >${pizza.name}</h3>
         <p>${pizza.price} $</p>
         <p class="kkal">${pizza.kkal} kkal</p>
-        <button id="list" class="${pizza.name}">show Components</buttons>
+        <button id="showList" class="${pizza.name}">show Components</buttons>
     </div>
   `}
 
-$(document).on('click', '#list', function (event) {
+$(document).on('click', '#showList', function (event) {
   var name = $(event.target).attr('class');
   for (var key in pizzas) {
     if (pizzas[key].name == name) {
@@ -325,7 +325,7 @@ $('#findPizza').keydown(function (e) {
       for (key in list) {
         if (pizzaComp == list[key]) {
           findPizzasArr.push(pizzas[key]);
-          const templatesTableFind = findPizzasArr.map(pizza => createCardTable(pizza));
+          const templatesTableFind = fi.map(pizza => createCardTable(pizza));
           const table = templatesTableFind.join(' ');
           document.querySelector('.table').innerHTML = table;
 
