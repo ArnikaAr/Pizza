@@ -25,16 +25,27 @@
             <div class="btnBar">
                 <button id="list" class="up">to up</button>
                 <button id="list" class="down">to down</button>
+                <input id="findPizza"type="text" size="40" required placeholder="enter ingredients">
             </div>
         </div>
-         <div class="constructor">
+        <div class="constructor">
             <i class="fas fa-cogs" id="showConst"></i>
             <div class="constructorItem">
                 <dialog id="Constructor">
                     <i class="fas fa-times-circle" id="closeConst"></i>
                     <p>Gather your pizza:</p>
+                    <p><b>Pizza name:</b><br>
+                        <input id="customName"type="text" size="40" required value="Custom pizza name">
+                       </p>
                     <select multiple class="constructorSelect"></select>
-                    <button>Order</button>
+                    <div class="customPrise" >Price: 3</div>
+                    <div class="customCalories"> Calories: 100</div>
+                    <ul class="yourPizza">
+
+                    </ul>
+                    </br>
+                    
+                    <button id="orderCustom" type="submit">Order</button>
                 </dialog>
             </div>
         </div>
@@ -50,7 +61,7 @@
                     <div class="allPrice"> Total price: </div>
                     <button id="showFinal">Order</button>
                     <dialog id="final">
-                            <i class="fas fa-times-circle" id="closeFinal"></i>
+                        <i class="fas fa-times-circle" id="closeFinal"></i>
                         <p>Thank you for the order!</p>
                     </dialog>
                 </dialog>

@@ -1,5 +1,5 @@
 const pizzas = [
-  { name: 'Karbonara', price: 15, kkal: 400, list: { cheese: 'dorBlue', meet: 'peperoni', vegetables: 'tomato', souse: 'tomatoSouse' }, img: './img/pizza2.jpg' },
+  { name: 'Karbonara', price: 15, kkal: 400, list: { check: "check", cheese: 'dorBlue', meet: 'peperoni', vegetables: 'tomato', souse: 'tomatoSouse' }, img: './img/pizza2.jpg' },
   { name: 'Margarita', price: 23, kkal: 390, list: { cheese: 'parmezan', meet: 'ham', vegetables: 'tomato', souse: 'tomatoSouse1', toping: 'chili' }, img: './img/pizza1.jpg' },
   { name: '4Cheese', price: 16, kkal: 390, list: { cheese: 'Mozzarella', meet: 'peperoni', vegetables: 'tomato', souse: 'tomatoSouse2' }, img: './img/pizza3.jpg' },
   { name: 'Tropicano', kkal: 35, price: 18, list: { cheese: 'dorBlue', meet: 'peperoni', vegetables: 'tomato', souse: 'tomatoSouse4' }, img: './img/pizza4.jpg' },
@@ -21,6 +21,11 @@ class newCart {
     this.price = price;
     this.kkal = kal;
   }
+}
+
+function counCart() {
+  let countCartLen = localStorage.length - 1;
+  $('#cartCounter').html(countCartLen);
 }
 var Cart = document.getElementById('Cart');
 document.querySelector('#showCart').onclick = function () {
@@ -65,7 +70,8 @@ $(document).ready(function () {
     $('.constructorSelect').append('<option value="' + key + '" id="constValue">' + key + '</option>');
 
   }
-})
+  counCart();
+});
 
 $("#type")
 
@@ -175,12 +181,77 @@ $(document).on('change', '.radio', function (event) {
   }
 
 });
+let newPizzaArr = [];
+var customCal = 100;
+var customPrice = 3;
+$('.constructorSelect').on({
+  'click': function () {
+    if (newPizzaArr.indexOf($(this).val()) == -1) {
+      $('.yourPizza').append('<tr><li id="' + $(this).val() + '"><td> ' + $(this).val() + '</td><td> <input  class="amount" type="number"min="1" value="1"></td><td><i class="fas fa-times-circle" id="deleteItem"></i></td></tr></li>');
+      newPizzaArr.push($(this).val());
+      for (key in components) {
+        if (key == $(this).val()) {
+          customCal = customCal + components[key];
+          $('.customCalories').html(' <div class="customCalories"> Calories: ' + customCal + ' </div>');
+        }
+      }
+      for (key in cost) {
+        if (key == $(this).val()) {
+          customPrice = customPrice + cost[key];
+          console.log(customPrice);
+          $('.customPrise').html('<div class="customPrise" >Price: ' + customPrice + '</div>');
+        }
+      }
+    }
+  },
+  'keydown': function (event) {
+    if (event.keyCode == 0x0D) {
+      $('.yourPizza').append('<li> ' + $(this).val() + '</li>');
+    }
+  },
+}, 'option')
 
+$(document).on('click', '#deleteItem', function (event) {
+  $(this).parent().remove();
+  console.log($(this).closest('li').attr('id'));
+  newPizzaArr = newPizzaArr.filter(val => val !== $(this).closest('li').attr('id'));
+  for (key in components) {
+    if (key == $(this).closest('li').attr('id')) {
+      customCal = customCal - components[key];
+      $('.customCalories').html(' <div class="customCalories"> Calories: ' + customCal + ' </div>');
+    }
+  }
+  for (key in cost) {
+    if (key == $(this).val()) {
+      customPrice = customPrice - components[key];
+      $('.customPrice').html(' <div class="customPrice"> Calories: ' + customPrice + ' </div>');
+    }
+  }
+  console.log(newPizzaArr);
+})
 
 
 
 let allPrice = 0;
 let cartArr = [];
+$(document).on('click', '#orderCustom', function (event) {
+  if (localStorage.getItem('email') == 'oryna.likhota@nure.ua') {
+    let customName = $('#customName').val();
+    console.log(customName);
+    cartObj = new newCart(customName, customCal, customPrice);
+    console.log(cartObj);
+    localStorage.setItem('pizza' + customName + '', JSON.stringify(cartObj));
+    var ourPizza = JSON.parse(localStorage.getItem('pizza' + customName + ''));
+    allPrice = allPrice + ourPizza.price;
+    $('.cartItem').append(' <tr> <td> ' + ourPizza.name + ' - </td><td> ' + ourPizza.kkal + ' kkal -  </td><td> ' + ourPizza.price + ' $ </td> <td> amount:<input  class="amount" type="number" min="1" value="1"></td></tr>');
+    $('.allPrice').html('Total price: ' + allPrice + ' $');
+    counCart();
+  }
+  else {
+    localStorage.clear();
+  }
+  $(this).prop('disabled', true);
+});
 
 $(document).on('click', '.order', function (event) {
   if (localStorage.getItem('email') == 'oryna.likhota@nure.ua') {
@@ -190,7 +261,7 @@ $(document).on('click', '.order', function (event) {
     allPrice = allPrice + ourPizza.price;
     $('.cartItem').append(' <tr> <td> ' + ourPizza.name + ' - </td><td> ' + ourPizza.kkal + ' kkal -  </td><td> ' + ourPizza.price + ' $ </td> <td> amount:<input  class="amount" type="number" min="1" value="1"></td></tr>');
     $('.allPrice').html('Total price: ' + allPrice + ' $')
-
+    counCart();
   }
   else {
     localStorage.clear();
@@ -240,6 +311,29 @@ $(".up").click(function () {
   document.querySelector('.table').innerHTML = table;
 
 })
+
+$('#findPizza').keydown(function (e) {
+  let findPizzasArr = [];
+  if (e.keyCode === 13) {
+    let pizzaComp = $('#findPizza').val().toLowerCase();
+    for (key in pizzas) {
+      var templist = Object.entries(pizzas[key].list).toString().split(',');
+      var list = [];
+      var list = templist.filter(function (v, i) {
+        return i % 2 !== 0;
+      });
+      for (key in list) {
+        if (pizzaComp == list[key]) {
+          findPizzasArr.push(pizzas[key]);
+          const templatesTableFind = findPizzasArr.map(pizza => createCardTable(pizza));
+          const table = templatesTableFind.join(' ');
+          document.querySelector('.table').innerHTML = table;
+
+        }
+      }
+    }
+  }
+});
 
 
 
